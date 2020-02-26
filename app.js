@@ -1,3 +1,4 @@
+
 import express from 'express';
 import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser';
@@ -10,9 +11,10 @@ let token;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const corsOptions = {
-    origin: 'http://localhost:3000'
+    origin: '*'
 }
 app.use(cors(corsOptions));
+
 app.get('/api', (req, res) => {
     res.json({
         message: 'welcome to the consultometer api',
