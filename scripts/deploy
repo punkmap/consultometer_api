@@ -5,7 +5,7 @@ ssh punkmap@64.225.125.231 <<EOF
  tee >(logger) <<< "*****NPM INSTALL START*****"
  npm install
  tee >(logger) <<< "*****PM2 RESTART*******"
- pm2 restart all
+ pm2 restart 4
  tee >(logger) <<< "*****DEPLOY FINISHED*****"
  exit
 EOF
