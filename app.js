@@ -37,7 +37,7 @@ app.post('/api/login', (req, res) => {
         res.json({
             token,
             status: "to success"
-        })
+        });
     });
 });
 // get all todos
