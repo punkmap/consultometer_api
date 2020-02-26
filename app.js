@@ -35,7 +35,8 @@ app.post('/api/login', (req, res) => {
         
         const token = headers['set-cookie'][0].split('=')[1].split('; ')[0];
         res.json({
-            token
+            token,
+            status: "success"
         })
     });
 });

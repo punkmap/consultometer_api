@@ -1,0 +1,11 @@
+ssh punkmap@64.225.125.231 <<EOF
+ cd /var/www/api/consultometer_api/
+ tee >(logger) <<< "*****GIT PULL START*****"
+ git pull
+ tee >(logger) <<< "*****NPM INSTALL START*****"
+ npm install
+ tee >(logger) <<< "*****PM2 RESTART*****"
+ pm2 restart all
+ tee >(logger) <<< "*****DEPLOY FINISHED*****"
+ exit
+EOF
