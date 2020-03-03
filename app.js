@@ -41,7 +41,7 @@ app.post('/api/login', (req, res) => {
     });
 });
 // get all todos
-app.get('/api/meetings', (req, res) => {
+app.get('/api/meetings-future', (req, res) => {
     console.log('req.body: ', req.query);
     let auth = req.query.token;
     let consultometer_db = require('nano')({
