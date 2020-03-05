@@ -111,6 +111,26 @@ app.post('/api/meeting/', (req, res) => {
         })
     });
 });
+app.put('/api/docs_bulk/', (req, res) => {
+    const docs = req.body.docs;
+    console.log('DOCS: ', docs);
+    const authToken = req.body.authToken;
+    console.log('AUTHTOKEN: ', req.body.authToken);
+    let consultometer_db = require('nano')({
+        url: 'http://64.225.122.227:5984/consultometer/',
+        cookie: 'AuthSession='+authToken,
+    })
+    consultometer_db.bulk({docs:docs})
+    .then((body) => {
+        console.log(body);
+        res.json({
+            body
+        })
+    })
+    .catch((err) => {
+        console.log('BULK MEETINGS ERR: ', err);
+    });
+});
 app.get('/api/attendees', (req, res) => {
     console.log('req.body: ', req.query);
     let auth = req.query.token;
