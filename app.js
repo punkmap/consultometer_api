@@ -67,7 +67,7 @@ app.get('/api/meetings-past', (req, res) => {
         url: 'http://64.225.122.227:5984/consultometer',
         cookie: 'AuthSession='+auth,
     })
-    consultometer_db.view('meetings', 'meetings-past-view', function (err, body, headers) {
+    consultometer_db.view('meetings', 'meetings-past-view', { descending: true }, function (err, body, headers) {
         if (err) {
           res.json({
               err
