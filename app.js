@@ -59,7 +59,8 @@ app.get('/api/meetings-future', (req, res) => {
             body
         })
       });
-});// get future meetings 
+});
+// get past meetings 
 app.get('/api/meetings-past', (req, res) => {
     console.log('req.body: ', req.query);
     let auth = req.query.token;
@@ -79,17 +80,52 @@ app.get('/api/meetings-past', (req, res) => {
         })
       });
 });
+app.get('/api/attendee-meeting-cost', (req, res) => {
+    console.log('req.body: ', req.query);
+    let auth = req.query.token;
+    let consultometer_db = require('nano')({
+        url: 'http://64.225.122.227:5984/consultometer',
+        cookie: 'AuthSession='+auth,
+    })
+    consultometer_db.view('attendees', 'attendee-meeting-cost-view', { descending: true, reduce: true, group: true }, function (err, body, headers) {
+        if (err) {
+          res.json({
+              err
+          });
+        }
+        res.json({
+            attendees: body.rows.sort(function(a,b) {
+                return b.value[0].sum-a.value[0].sum
+                })
+        })
+      });
+});
+app.get('/api/project-meeting-cost', (req, res) => {
+    console.log('req.body: ', req.query);
+    let auth = req.query.token;
+    let consultometer_db = require('nano')({
+        url: 'http://64.225.122.227:5984/consultometer',
+        cookie: 'AuthSession='+auth,
+    })
+    consultometer_db.view('projects', 'project-meeting-cost-view', { descending: true, reduce: true, group: true }, function (err, body, headers) {
+        if (err) {
+          res.json({
+              err
+          });
+        }
+        res.json({
+            projects: body.rows,
+        })
+      });
+});
 app.put('/api/meeting/', (req, res) => {
     const meeting = req.body.meeting;
     const authToken = req.body.authToken;
-    console.log('MEETING: ', meeting);
-    console.log('authToken: ', authToken);
     let consultometer_db = require('nano')({
         url: 'http://64.225.122.227:5984/consultometer',
         cookie: 'AuthSession='+authToken,
     })
     consultometer_db.insert(meeting, meeting._id).then((body) => {
-        console.log('BODY: ', body);
         //const token = headers['set-cookie'][0].split('=')[1].split('; ')[0];
         res.json({
             body
@@ -104,7 +140,6 @@ app.post('/api/meeting/', (req, res) => {
         cookie: 'AuthSession='+authToken,
     })
     consultometer_db.insert(meeting, '').then((body) => {
-        console.log('BODY: ', body);
         //const token = headers['set-cookie'][0].split('=')[1].split('; ')[0];
         res.json({
             body
@@ -113,9 +148,7 @@ app.post('/api/meeting/', (req, res) => {
 });
 app.put('/api/docs_bulk/', (req, res) => {
     const docs = req.body.docs;
-    console.log('DOCS: ', docs);
     const authToken = req.body.authToken;
-    console.log('AUTHTOKEN: ', req.body.authToken);
     let consultometer_db = require('nano')({
         url: 'http://64.225.122.227:5984/consultometer/',
         cookie: 'AuthSession='+authToken,
@@ -158,7 +191,6 @@ app.post('/api/attendee/', (req, res) => {
         cookie: 'AuthSession='+authToken,
     })
     consultometer_db.insert(attendee, '').then((body) => {
-        console.log('BODY: ', body);
         //const token = headers['set-cookie'][0].split('=')[1].split('; ')[0];
         res.json({
             body
@@ -168,8 +200,6 @@ app.post('/api/attendee/', (req, res) => {
 app.put('/api/attendee/', (req, res) => {
     const attendee = req.body.attendee;
     const authToken = req.body.authToken;
-    console.log('MEETING: ', attendee);
-    console.log('authToken: ', authToken);
     let consultometer_db = require('nano')({
         url: 'http://64.225.122.227:5984/consultometer',
         cookie: 'AuthSession='+authToken,
@@ -187,9 +217,6 @@ app.delete('/api/attendee/', (req, res) => {
     const id = req.body.params.id;
     const rev = req.body.params.rev;
     const authToken = req.body.params.authToken;
-    console.log('ID: ', id);
-    console.log('rev: ', rev);
-    console.log('AUTHTOKEN: ', authToken);
     let consultometer_db = require('nano')({
         url: 'http://64.225.122.227:5984/consultometer',
         cookie: 'AuthSession='+authToken,
