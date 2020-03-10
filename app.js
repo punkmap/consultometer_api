@@ -80,6 +80,20 @@ app.get('/api/meetings-past', (req, res) => {
         })
       });
 });
+app.get('/api/meeting/:id', function (req, res) {
+    console.log('req.body: ', req.query);
+    let auth = req.query.token;
+    let consultometer_db = require('nano')({
+        url: 'http://64.225.122.227:5984/consultometer',
+        cookie: 'AuthSession='+auth,
+    });
+    consultometer_db.get(req.params.id).then((body) => {
+        console.log('body: ', body);
+        res.json({
+            meeting: body,
+        })
+    });
+});
 app.get('/api/attendee-meeting-cost', (req, res) => {
     console.log('req.body: ', req.query);
     let auth = req.query.token;
